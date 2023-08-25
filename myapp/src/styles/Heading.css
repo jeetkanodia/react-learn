@@ -1,0 +1,12 @@
+nav{
+    background-color: white;
+    box-shadow: 0 0 10px black ;
+    padding: 3rem;
+}
+
+nav > a{
+    font: 600 1.7rem cursive;
+    color: pink;
+    text-decoration: none;
+    margin: 0 1rem;
+}
