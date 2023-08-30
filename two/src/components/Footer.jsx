@@ -15,7 +15,11 @@ const Footer = () => {
     <Box bgColor={'blackAlpha.900'} minH={'40'} p="16" color={'white'}>
       <Stack direction={['column', 'row']}>
         <VStack alignItems={'stretch'} w={'full'} px="4">
-          <Heading size="md" textTransform={'uppercase'}>
+          <Heading
+            size="md"
+            textAlign={['center', 'left']}
+            textTransform={'uppercase'}
+          >
             Subscribe to get updates
           </Heading>
 
@@ -54,12 +58,15 @@ const Footer = () => {
             Social Media
           </Heading>
           <Button variant={'link'} colorScheme={'whiteAlpha'}>
-            <a target='blank' href="https://www.instagram.com/jeet_kanodia_/">Instagram</a>
+            <a target="blank" href="https://www.instagram.com/jeet_kanodia_/">
+              Instagram
+            </a>
           </Button>
           <Button variant={'link'} colorScheme={'whiteAlpha'}>
-            <a target='blank' href="https://github.com/jeetkanodia">GitHub</a>
+            <a target="blank" href="https://github.com/jeetkanodia">
+              GitHub
+            </a>
           </Button>
-          
         </VStack>
       </Stack>
     </Box>
