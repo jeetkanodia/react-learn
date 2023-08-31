@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Button,
   Container,
   HStack,
   Image,
@@ -22,12 +23,15 @@ import axios from "axios";
 import { server } from "../index";
 import { useParams } from "react-router-dom";
 import Error from "./Error";
+import Chart from "./Chart";
 
 const CoinDetails = () => {
   const [coin, setCoin] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currency, setCurrency] = useState("inr");
+  const [days, setDays] = useState("24h");
+  const [chartArray, setChartArray] = useState([]);
 
   const params = useParams();
 
@@ -39,12 +43,21 @@ const CoinDetails = () => {
   const currencySymbol =
     currency === "inr" ? "₹" : currency === "eur" ? "€" : "$";
 
+  const btns = ["24h", "7d", "14d", "30d", "60d", "200d", "365d", "max"];
+  const switchChartStats = (key)=>{
+    setDays(key);
+    setLoading(true);
+  }
   useEffect(() => {
     const fetchCoin = async () => {
       try {
         const { data } = await axios.get(`${server}/coins/${params.id}`);
+        const { data: chartData } = await axios.get(
+          `${server}/coins/${params.id}/market_chart?vs_currency=${currency}&days=${days}`
+        );
+
         setCoin(data);
-        console.log(data);
+        setChartArray(chartData.prices);
         setLoading(false);
       } catch (error) {
         setError(true);
@@ -52,7 +65,7 @@ const CoinDetails = () => {
       }
     };
     fetchCoin();
-  }, [params.id, currency]);
+  }, [params.id, currency, days]);
 
   if (error) return <Error message={"Error while fetching the coin"} />;
 
@@ -62,7 +75,17 @@ const CoinDetails = () => {
         <Loader />
       ) : (
         <>
-          <Box width={"full"} borderWidth={1}></Box>
+          <Box width={"full"} borderWidth={1}>
+            <Chart currency={currencySymbol} arr={chartArray} days={days} />
+          </Box>
+
+          <HStack p={'4'} overflowX={'auto'}>
+            {
+              btns.map((i)=>(
+                <Button key={i} onClick={()=>switchChartStats(i)}>{i}</Button>
+              ))
+            }
+          </HStack>
 
           <RadioGroup value={currency} onChange={changeCurrency} p={8}>
             <HStack spacing={"4"}>
@@ -110,11 +133,40 @@ const CoinDetails = () => {
               low={`${currencySymbol}${coin.market_data.low_24h[currency]}`}
             />
 
-            <Box></Box>
+            <Box w={"full"} p={"4"}>
+              <Item title={"Max Supply"} value={coin.market_data.max_supply} />
+              <Item
+                title={"Circulating Supply"}
+                value={coin.market_data.circulating_supply}
+              />
+              <Item
+                title={"Market Capital"}
+                value={`${currencySymbol}${coin.market_data.market_cap[currency]}`}
+              />
+              <Item
+                title={"All Time Low"}
+                value={`${currencySymbol}${coin.market_data.atl[currency]}`}
+              />
+              <Item
+                title={"All Time High"}
+                value={`${currencySymbol}${coin.market_data.ath[currency]}`}
+              />
+            </Box>
           </VStack>
         </>
       )}
     </Container>
+  );
+};
+
+const Item = ({ title, value }) => {
+  return (
+    <HStack justifyContent={"space-between"} w={"full"} my={"4"}>
+      <Text fontFamily={"Bebas Neue"} letterSpacing={"widest"}>
+        {title}
+      </Text>
+      <Text>{value}</Text>
+    </HStack>
   );
 };
 

@@ -34,7 +34,6 @@ const Coins = () => {
           `${server}/coins/markets?vs_currency=${currency}&page=${page}`
         );
         setCoins(data);
-        console.log(data);
         setLoading(false);
       } catch (error) {
         setError(true);
