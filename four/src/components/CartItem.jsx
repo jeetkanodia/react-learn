@@ -22,7 +22,7 @@ const CartItem = ({
         <p>{qty}</p>
         <button onClick={()=>incrementHandler(id)}>+</button>
       </div>
-      <AiFillDelete onClick={()=>decrementHandler(id)}/>
+      <AiFillDelete onClick={()=>deleteHandler(id)}/>
     </div>
   );
 };

@@ -22,6 +22,9 @@ const Home = () => {
       type:'addToCart',
       payload:options
     })
+    dispatch({
+      type: "calculatePrice"
+    })
     toast.success("Added to Cart")
   };
   return (
