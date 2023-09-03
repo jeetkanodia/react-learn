@@ -1,25 +1,40 @@
 import React from "react";
 import CartItem from "./CartItem";
-
-const img1 =
-  "https://www.reliancedigital.in/medias/Apple-MGN63HNA-Laptops-491946461-i-1-1200Wx1200H?context=bWFzdGVyfGltYWdlc3wxNzczNDJ8aW1hZ2UvanBlZ3xpbWFnZXMvaDVhL2gyZC85NDQzMDgzNTgzNTE4LmpwZ3xhYzRiNWIxZGQ2NjNiNWIyYjI0Y2ZkYTZlZWQ3MTFjZTMxYzVmNDBiNmM5Mzk5OTM2OGVkZmExMjMyYjIxNDQ4";
-const img2 =
-"https://neemans.com/cdn/shop/files/ND-RLSneakers-HaleBlack-_WebOptimized_a_900x.jpg?v=1691616146";
-
+import { useDispatch, useSelector } from "react-redux";
 
 
 const Cart = () => {
+  const { cartItems } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+
+
+  const incrementHandler = (id) => {
+    dispatch({
+      type: "addToCart",
+      payload: {id}
+    })
+  };
+  const decrementHandler = (id) => {
+    dispatch({
+      type: "decrement",
+      payload: id
+    });
+  };
+  const deleteHandler = (id) => {};
   return (
     <div className="cart">
-      <main>
-        <CartItem
-         imgSrc={img1}
-         name={'mac'}
-         price={123}
-         qty={1}
-         id="asdf"
-         /> 
-      </main>
+      <main> 
+      { cartItems.length > 0 ? 
+       (
+        cartItems.map((item) => (
+          <CartItem 
+          decrementHandler={decrementHandler}
+          incrementHandler={incrementHandler}
+          deleteHandler={deleteHandler}
+           imgSrc={item.imgSrc} name={item.name} price={item.price} qty={item.quantity} id={item.id} key={item.id} />
+        ))): 
+        <h1>No Items Yet</h1>
+      }</main>
       <aside>
         <h2>Subtotal : ${49}</h2>
         <h2>Shipping : ${5}</h2>
